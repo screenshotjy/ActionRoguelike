@@ -7,7 +7,8 @@
 #include "SCharacter.generated.h"
 
 class UCameraComponent;
-class USpringArmComponent; 
+class USpringArmComponent;
+class USInteractionComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -19,23 +20,39 @@ public:
 	ASCharacter();
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> ProjectileClass;
+	
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UAnimMontage* AttackAnim;
+
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
-	
+
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArmComp;
-	
+
+	UPROPERTY(VisibleAnywhere)
+	USInteractionComponent* InteractionComp;
+
+	FTimerHandle TimerHandle_PrimaryAttack;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void MoveForward(float Value);
-	
+
 	void MoveRight(float Value);
-public:	
+
+	void PrimaryAttack_TimeElapsed() const;
+	
+	void PrimaryAttack();
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void PrimaryInteract();
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 };
